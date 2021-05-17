@@ -4,7 +4,7 @@ public class Kuhn {
     public  static List<Integer>[] edgesL;
     public  static int [] edgeR;
     public  static boolean[] used;
-    public static int start(){
+    public static long start(){
         edgesL=GraphGenerator.getInstance().getListEdgeL();
         edgeR=new int[GraphGenerator.getInstance().getN()-GraphGenerator.getInstance().getL()];
         for (int i=0;i<edgeR.length;i++) {
@@ -12,22 +12,14 @@ public class Kuhn {
         }
         used=new boolean[GraphGenerator.getInstance().getL()];
         int size=GraphGenerator.getInstance().getL();
-        //время замерять
+        long start = System.currentTimeMillis();
         for (int i=0;i<size;++i) {
             for (int j=0;j<used.length ; j++)
                 used[j]=false;
             dfs(i);
         }
-        //
-        int counter=0;
-        for(int i=0;i<edgeR.length;i++) {
-            if(edgeR[i]!=-1) {
-                counter++;
-               // System.out.println(edgeR[i] + " + " + (int) (i + GraphGenerator.getInstance().getL()));
-            }
-        }
-        return counter;
-        //System.out.println(counter+"кун");
+        long timeWorkCode = System.currentTimeMillis() - start;
+        return timeWorkCode;
     }
     public static boolean dfs(int i){
         if (used[i])

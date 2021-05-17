@@ -12,7 +12,7 @@ public class HopcroftKarp {
     public  static int[] dist;
     public static int pairU[];
     public static int pairV[];
-    public static int start(){
+    public static long start(){
             Q= new LinkedList<>();
             pairU=new int[GraphGenerator.getInstance().getL()+1];
             pairV=new int[GraphGenerator.getInstance().getN()-GraphGenerator.getInstance().getL()+1];
@@ -21,16 +21,15 @@ public class HopcroftKarp {
 
             Arrays.fill(pairU, NIL);
             Arrays.fill(pairV, NIL);
-            int matching=0;
+            long start = System.currentTimeMillis();
             while(bfs()==true){
                 for(int u=1;u<GraphGenerator.getInstance().getL()+1;u++) {
                     if (pairU[u]==NIL)
-                        if(dfs(u))
-                            matching++;
+                        dfs(u);
                 }
             }
-           // System.out.println(matching);;
-            return matching;
+            long timeWorkCode = System.currentTimeMillis() - start;
+            return timeWorkCode;
 
     }
     public static boolean bfs(){

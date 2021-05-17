@@ -4,16 +4,14 @@ public class Main {
 
 
     public static void main(String[] args) {
-
-    int counter=0;
-    for (int i=0;i<100;i++) {
-        GraphGenerator.getInstance().newRandomGraph(1000);
-
-        if (FordFulkerson.start()== Kuhn.start())
-            counter++;
-    }
-        System.out.println(counter);
-
+        int n=10;             //n-сколько итераций
+        for(int i=0;i<n;i++) {
+            GraphGenerator.getInstance().newRandomGraph(1000);   //1000-сколько вершин в графе
+            System.out.println(Kuhn.start() + "Кун");
+            System.out.println(HopcroftKarp.start() + "Хопкрофт Карп");
+            System.out.println(FordFulkerson.start() + "Форд Фалкерсон");
+            System.out.println(EdmondsKarp.start() + "Едмондс Карп");
+        }
 
     }
 

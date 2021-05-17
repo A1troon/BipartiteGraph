@@ -25,9 +25,11 @@ public class FordFulkerson {
         return 0;
     }
 
-    // Usage example
-    public static int start() {
+    public static long start() {
         int capacity[][] = GraphGenerator.getInstance().addStartEnd();
-        return maxFlow(capacity, 0, GraphGenerator.getGraphGenerator().getN()+1);
+        long start = System.currentTimeMillis();
+        maxFlow(capacity, 0, GraphGenerator.getGraphGenerator().getN()+1);
+        long timeWorkCode = System.currentTimeMillis() - start;
+        return timeWorkCode;
     }
 }
