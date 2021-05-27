@@ -1,90 +1,86 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
 
-import java.lang.*;
-import java.util.LinkedList;
 
-class EdmondsKarp {
-    static int V;
-    public EdmondsKarp(int v) {
-        this.V=v;
+public class EdmondsKarp {
+
+    private int[][] flow; //max flow beetween i and j verticles
+    private int[][] capacity; // edge capacity
+    private int[] parent; //parent
+    private boolean[] visited; //just for checking if visited
+    @SuppressWarnings("unused")
+    private int n, m;
+
+    public EdmondsKarp(int numOfVerticles, int numOfEdges,int[][] capacity) {
+        this.n = numOfVerticles;
+        this.m = numOfEdges;
+        this.flow = new int[n][n];
+        this.capacity = capacity;
+        this.parent = new int[n];
+        this.visited = new boolean[n];
     }
 
 
-    boolean bfs(int rGraph[][], int s, int t, int parent[])
-    {
-        boolean visited[] = new boolean[V];
-        for (int i = 0; i < V; ++i)
-            visited[i] = false;
 
-        LinkedList<Integer> queue
-                = new LinkedList<Integer>();
-        queue.add(s);
-        visited[s] = true;
-        parent[s] = -1;
 
-        while (queue.size() != 0) {
-            int u = queue.poll();
+    public int getMaxFlow(int s, int t) {
+        while (true) {
+            final Queue<Integer> Q = new ArrayDeque<Integer>();
+            Q.add(s);
 
-            for (int v = 0; v < V; v++) {
-                if (visited[v] == false
-                        && rGraph[u][v] > 0) {
-                    if (v == t) {
-                        parent[v] = u;
-                        return true;
+            for (int i = 0; i < this.n; ++i)
+                visited[i] = false;
+            visited[s] = true;
+
+            boolean check = false;
+            int current;
+            while (!Q.isEmpty()) {
+                current = Q.peek();
+                if (current == t) {
+                    check = true;
+                    break;
+                }
+                Q.remove();
+                for (int i = 0; i < n; ++i) {
+                    if (!visited[i] && capacity[current][i] > flow[current][i]) {
+                        visited[i] = true;
+                        Q.add(i);
+                        parent[i] = current;
                     }
-                    queue.add(v);
-                    parent[v] = u;
-                    visited[v] = true;
                 }
             }
-        }
-        return false;
-    }
+            if (check == false)
+                break;
 
-    int fordFulkerson(int graph[][], int s, int t)
-    {
-        int u, v;
+            int temp = capacity[parent[t]][t] - flow[parent[t]][t];
+            for (int i = t; i != s; i = parent[i])
+                temp = Math.min(temp, (capacity[parent[i]][i] - flow[parent[i]][i]));
 
-        int rGraph[][] = new int[V][V];
-
-        for (u = 0; u < V; u++)
-            for (v = 0; v < V; v++)
-                rGraph[u][v] = graph[u][v];
-
-        int parent[] = new int[V];
-
-        int max_flow = 0; // There is no flow initially
-
-        while (bfs(rGraph, s, t, parent)) {
-
-            int path_flow = Integer.MAX_VALUE;
-            for (v = t; v != s; v = parent[v]) {
-                u = parent[v];
-                path_flow
-                        = Math.min(path_flow, rGraph[u][v]);
+            for (int i = t; i != s; i = parent[i]) {
+                flow[parent[i]][i] += temp;
+                flow[i][parent[i]] -= temp;
             }
-
-
-            for (v = t; v != s; v = parent[v]) {
-                u = parent[v];
-                rGraph[u][v] -= path_flow;
-                rGraph[v][u] += path_flow;
-            }
-
-            max_flow += path_flow;
         }
 
-
-        return max_flow;
+        int result = 0;
+        for (int i = 0; i < n; ++i)
+            result += flow[s][i];
+        return result;
     }
+    public static long start(){
+        int numOfEdges=0;
+        int capacity[][] = GraphGenerator.getInstance().addStartEnd();
+        int numOfVerticles=(int)capacity.length;
+        for(int i=0;i<capacity.length;i++)
+            for(int j=0;j<capacity.length;j++)
+                if(capacity[i][j]==1)
+                    numOfEdges++;
 
-    public static long start()
-    {
-        int graph[][] = GraphGenerator.getInstance().addStartEnd();
-        EdmondsKarp m = new EdmondsKarp(GraphGenerator.getGraphGenerator().getN()+2);
+        EdmondsKarp edmondsKarp=new EdmondsKarp(numOfVerticles,numOfEdges,capacity);
         long start = System.currentTimeMillis();
-        m.fordFulkerson(graph, 0, GraphGenerator.getGraphGenerator().getN()+1);
+        edmondsKarp.getMaxFlow(0,GraphGenerator.getGraphGenerator().getN()+1);
+
         long timeWorkCode = System.currentTimeMillis() - start;
         return timeWorkCode;
-
     }
 }

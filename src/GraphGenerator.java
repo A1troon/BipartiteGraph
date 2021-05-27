@@ -8,6 +8,7 @@ public class GraphGenerator {
     private List<Integer>[] listEdgeL; //хранит для левых вершин список связанных с ним из правых
     private int N;  //всего вершин
     private int L;  //вершин слева от 0 до L-1
+    private int V; //кол-во ребер
     private GraphGenerator(){
     }
     public static GraphGenerator getInstance(){
@@ -16,6 +17,7 @@ public class GraphGenerator {
         return graphGenerator;
     }
     public GraphGenerator newRandomGraph(int n){
+        V=0;
         this.N=n;
         graph=new int[n][n];
         Random random=new Random();
@@ -25,6 +27,7 @@ public class GraphGenerator {
             listEdgeL[i]=new ArrayList();
             for (int j = L; j < n; j++)
                 if (random.nextBoolean()) {
+                    V++;
                     listEdgeL[i].add(j-this.L);
                     graph[i][j] = 1;
                     graph[j][i] = 1;
@@ -72,6 +75,14 @@ public class GraphGenerator {
 
     public void setL(int l) {
         L = l;
+    }
+
+    public int getV() {
+        return V;
+    }
+
+    public void setV(int v) {
+        V = v;
     }
 
     public static GraphGenerator getGraphGenerator() {
