@@ -120,4 +120,41 @@ public class GraphGenerator {
 
     return mas;
     }
+    public int[][] newRudenGraph(int v,int e)
+    {   this.N=v;
+        this.L=v/2;
+        //v - количество вершин(всегда чётное)
+        //e - число ребёр
+        //e принадлежит к диапазону от [v/2;(v/2)^2]
+        int[][] graphRudena = new int[v/2][v/2];
+        for (int i = 0; i < v/2; i++) {
+            for (int j = 0; j < v/2; j++) {
+                graphRudena[i][j] = 0;
+            }
+        }
+        int esum = 0;
+        while (esum != e)
+        {
+            int x1 = (int) (Math.random()*(v/2));
+            int x2 = (int) (Math.random()*(v/2));
+            if(graphRudena[x1][x2] != 1)
+            {
+                graphRudena[x1][x2] = 1;
+                esum++;
+            }
+        }
+
+        graph=new int[v][v];
+        listEdgeL =new ArrayList[L];
+        for(int i=0;i<L;i++) {
+            listEdgeL[i]=new ArrayList();
+            for (int j = L; j < N; j++)
+                if (graphRudena[i][j-v/2]==1) {
+                    listEdgeL[i].add(j-this.L);
+                    graph[i][j] = 1;
+                    graph[j][i] = 1;
+                }
+        }
+        return graph;
+    }
 }
